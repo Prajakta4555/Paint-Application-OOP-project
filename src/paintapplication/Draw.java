@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -24,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -33,14 +35,23 @@ import paintapplication.Canvas;
  * @author Amruta
  */
 public class Draw {
+    Canvas canvas;
     private int width, height;
     Color color = Color.WHITE;
-    JButton GREENbutton, REDbutton, BLUEbutton, BLACKbutton, ORANGEbutton, YELLOWbutton, PINKbutton, 
-                        MAGENTAbutton,CYANbutton, GRAYbutton, lightGraybutton, 
-			colorPicker, rectangle, pencil;
-    private Icon rect = new ImageIcon("D:\\new\\SwingPaint\\src\\bin\\rect.png");
-    private Icon pencilIcon = new ImageIcon("D:\\new\\SwingPaint\\src\\bin\\pencil.png");
-    Canvas canvas;
+    JButton clearButton, GREENbutton, REDbutton, BLUEbutton, BLACKbutton, ORANGEbutton, YELLOWbutton, PINKbutton, 
+                        MAGENTAbutton,CYANbutton, GRAYbutton, lightGraybutton, loadButton, saveButton,
+			saveAsButton,colorPicker, rectangle, pencil, undoButton, redoButton;
+    private JFileChooser fileChooser;
+    private File file;
+    private Icon save = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\save.png");
+    private Icon open = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\open.png");
+    private Icon clear = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\clear.png");
+    private Icon undo = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\undo.png");
+    private Icon redo = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\redo.png");
+    private Icon rect = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\rect.png");
+    private Icon color_picker = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\color-picker.png");
+    private Icon pencilIcon = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\pencil.png");
+    private int saveCounter = 0;
     private JLabel filenameBar, thicknessStat;
     private JSlider thicknessSlider;
     ChangeListener thick = new ChangeListener() {
@@ -52,7 +63,9 @@ public class Draw {
 	};
     ActionListener listener = new ActionListener() {
     public void actionPerformed(ActionEvent event) {
-			if (event.getSource() == BLACKbutton) {
+                       if (event.getSource() == clearButton) {
+				canvas.clear();
+                       }else if (event.getSource() == BLACKbutton) {
 				canvas.BLACK();
 			} else if (event.getSource() == BLUEbutton) {
 				canvas.BLUE();
@@ -74,38 +87,78 @@ public class Draw {
 				canvas.GRAY();
 			} else if (event.getSource() == lightGraybutton) {
 				canvas.lightGray();
-			} 
-                        else if (event.getSource() == rectangle) {
+			} else if (event.getSource() == undoButton) {
+				canvas.undo();
+			} else if (event.getSource() == redoButton) {
+				canvas.redo();
+                        } else if (event.getSource() == rectangle) {
 				canvas.rect();
 			} else if (event.getSource() == pencil) {
 				canvas.pencil();
-			}
-                        else if (event.getSource() == colorPicker) {
+			}else if (event.getSource() == saveButton) {
+				if (saveCounter == 0) {
+					fileChooser = new JFileChooser();
+					if (fileChooser.showSaveDialog(saveButton) == JFileChooser.APPROVE_OPTION) {
+						file = fileChooser.getSelectedFile();
+						saveCounter = 1;
+						filenameBar.setText(file.toString());
+						canvas.save(file);
+					}
+				} else {
+					filenameBar.setText(file.toString());
+					canvas.save(file);
+				}
+			} else if (event.getSource() == saveAsButton) {
+				saveCounter = 1;
+				fileChooser = new JFileChooser();
+				if (fileChooser.showSaveDialog(saveAsButton) == JFileChooser.APPROVE_OPTION) {
+					file = fileChooser.getSelectedFile();
+					filenameBar.setText(file.toString());
+					canvas.save(file);
+				}
+			} else if (event.getSource() == loadButton) {
+				fileChooser = new JFileChooser();
+				if (fileChooser.showOpenDialog(loadButton) == JFileChooser.APPROVE_OPTION) {
+					file = fileChooser.getSelectedFile();
+					filenameBar.setText(file.toString());
+					canvas.load(file);
+				}
+			} else if (event.getSource() == colorPicker) {
 				color = JColorChooser.showDialog(null, "Pick your color!",
 						color);
 				if (color == null)
 					color = (Color.WHITE);
 				canvas.picker(color);
 			}
-            }		
-    };
+		}
+	};
     public void setDimension(int width,int height){
         this.width = width;
         this.height = height;
     }
     
-    public void startPaint() { 
-            JFrame frame = new JFrame("Paint");
-            Container container = frame.getContentPane();
-            container.setLayout(new BorderLayout());
-            canvas = new Canvas();
-            container.add(canvas, BorderLayout.CENTER);
-            frame.setVisible(true);
+    public void startPaint() {
+		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+	        if ("Nimbus".equals(info.getName())) {
+	            try {
+					UIManager.setLookAndFeel(info.getClassName());
+				} catch (ClassNotFoundException | InstantiationException
+						| IllegalAccessException
+						| UnsupportedLookAndFeelException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	            break;
+	        }
+	    }
+		JFrame frame = new JFrame("Paint");
+		Container container = frame.getContentPane();
+		container.setLayout(new BorderLayout());
+		canvas = new Canvas();
 
-            frame.setSize(width+50,height+50);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            
-            JPanel panel = new JPanel();
+		container.add(canvas, BorderLayout.CENTER);
+
+                JPanel panel = new JPanel();
 		JPanel panel1 = new JPanel();
 		Box box = Box.createVerticalBox();
 		Box box1 = Box.createHorizontalBox();
@@ -120,12 +173,20 @@ public class Draw {
 		rectangle.setPreferredSize(new Dimension(40, 40));
 		rectangle.addActionListener(listener);
 		
-                thicknessSlider = new JSlider(JSlider.VERTICAL, 0, 10, 1);
+                thicknessSlider = new JSlider(JSlider.VERTICAL, 0, 50, 1);
 		thicknessSlider.setMajorTickSpacing(25);
-		thicknessSlider.setPaintTicks(true);
+		thicknessSlider.setPaintTicks(false);
 		thicknessSlider.setPreferredSize(new Dimension(40, 40));
 		thicknessSlider.addChangeListener(thick);
-		
+                
+		undoButton = new JButton(undo);
+		undoButton.setPreferredSize(new Dimension(40, 40));
+		undoButton.addActionListener(listener);
+
+		redoButton = new JButton(redo);
+		redoButton.setPreferredSize(new Dimension(40, 40));
+		redoButton.addActionListener(listener);
+                
 		BLACKbutton = new JButton();
 		BLACKbutton.setBackground(Color.BLACK);
 		BLACKbutton.setPreferredSize(new Dimension(40, 40));
@@ -180,10 +241,18 @@ public class Draw {
 		lightGraybutton.setBackground(Color.LIGHT_GRAY);
 		lightGraybutton.setPreferredSize(new Dimension(40, 40));
 		lightGraybutton.addActionListener(listener);
+                
+                saveButton = new JButton(save);
+		saveButton.addActionListener(listener);
 		
-		colorPicker = new JButton("Color Picker");
+		loadButton = new JButton(open);
+		loadButton.addActionListener(listener);
+		
+		colorPicker = new JButton(color_picker);
 		colorPicker.addActionListener(listener);
-		
+                
+		clearButton = new JButton(clear);
+		clearButton.addActionListener(listener);
 
 		filenameBar = new JLabel("");
 		thicknessStat = new JLabel("1");
@@ -194,7 +263,11 @@ public class Draw {
 		box.add(box1, BorderLayout.NORTH);
 		panel1.add(filenameBar, BorderLayout.SOUTH);
 		box.add(Box.createVerticalStrut(10));
+                //box.add(undoButton, BorderLayout.NORTH);
+		box.add(Box.createVerticalStrut(5));
+		//box.add(redoButton, BorderLayout.NORTH);
 		
+                panel.add(undoButton);
                 panel.add(lightGraybutton);
                 panel.add(GRAYbutton);
                 panel.add(CYANbutton);
@@ -206,9 +279,14 @@ public class Draw {
                 panel.add(MAGENTAbutton);
                 panel.add(REDbutton);				
                 panel.add(BLACKbutton);
+                panel.add(saveButton);
+		
+		panel.add(loadButton);
+                
                       
                 panel.add(colorPicker);
-		
+		panel.add(clearButton);
+                panel.add(redoButton);
 		container.add(panel, BorderLayout.NORTH);
 		container.add(panel1, BorderLayout.SOUTH);
 		container.add(box, BorderLayout.WEST);
@@ -251,4 +329,4 @@ public class Draw {
                 JOptionPane.showMessageDialog(null, myPanel,"Please enter valid number!", JOptionPane.ERROR_MESSAGE);
 }
            return d;
-}
+}}
