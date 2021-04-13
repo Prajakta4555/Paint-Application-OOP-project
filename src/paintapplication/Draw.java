@@ -40,7 +40,7 @@ public class Draw {
     Color color = Color.WHITE;
     JButton clearButton, GREENbutton, REDbutton, BLUEbutton, BLACKbutton, ORANGEbutton, YELLOWbutton, PINKbutton, 
                         MAGENTAbutton,CYANbutton, GRAYbutton, lightGraybutton, loadButton, saveButton,
-			saveAsButton,colorPicker, rectangle, pencil, undoButton, redoButton;
+			saveAsButton,colorPicker, rectangle, pencil, undoButton, redoButton, eraserButton;
     private JFileChooser fileChooser;
     private File file;
     private Icon save = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\save.png");
@@ -51,6 +51,8 @@ public class Draw {
     private Icon rect = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\rect.png");
     private Icon color_picker = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\color-picker.png");
     private Icon pencilIcon = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\pencil.png");
+    
+    private Icon eraser = new ImageIcon("C:\\COEP\\OOP project\\RPP Project\\Final\\PaintApplication\\PaintApplication\\src\\resources\\eraser.png");
     private int saveCounter = 0;
     private JLabel filenameBar, thicknessStat;
     private JSlider thicknessSlider;
@@ -63,39 +65,59 @@ public class Draw {
 	};
     ActionListener listener = new ActionListener() {
     public void actionPerformed(ActionEvent event) {
+                       canvas.setThickness(thicknessSlider.getValue());
                        if (event.getSource() == clearButton) {
 				canvas.clear();
-                       }else if (event.getSource() == BLACKbutton) {
+                       }
+                       else if (event.getSource() == BLACKbutton) {
 				canvas.BLACK();
-			} else if (event.getSource() == BLUEbutton) {
+			}
+                       else if (event.getSource() == BLUEbutton) {
 				canvas.BLUE();
-			} else if (event.getSource() == GREENbutton) {
+			} 
+                       else if (event.getSource() == GREENbutton) {
 				canvas.GREEN();
-			} else if (event.getSource() == REDbutton) {
+			} 
+                       else if (event.getSource() == REDbutton) {
 				canvas.RED();
-			} else if (event.getSource() == ORANGEbutton) {
+			} 
+                       else if (event.getSource() == ORANGEbutton) {
 				canvas.ORANGE();
-			} else if (event.getSource() == YELLOWbutton) {
+			} 
+                       else if (event.getSource() == YELLOWbutton) {
 				canvas.YELLOW();
-			} else if (event.getSource() == PINKbutton) {
+			} 
+                       else if (event.getSource() == PINKbutton) {
 				canvas.PINK();
-			} else if (event.getSource() == MAGENTAbutton) {
+			} 
+                       else if (event.getSource() == MAGENTAbutton) {
 				canvas.MAGENTA();
-			} else if (event.getSource() == CYANbutton) {
+			} 
+                       else if (event.getSource() == CYANbutton) {
 				canvas.CYAN();
-			} else if (event.getSource() == GRAYbutton) {
+			} 
+                       else if (event.getSource() == GRAYbutton) {
 				canvas.GRAY();
-			} else if (event.getSource() == lightGraybutton) {
+			} 
+                       else if (event.getSource() == lightGraybutton) {
 				canvas.lightGray();
-			} else if (event.getSource() == undoButton) {
+			} 
+                       else if (event.getSource() == eraserButton) {
+				canvas.Erase();
+			}
+                       else if (event.getSource() == undoButton) {
 				canvas.undo();
-			} else if (event.getSource() == redoButton) {
+			} 
+                       else if (event.getSource() == redoButton) {
 				canvas.redo();
-                        } else if (event.getSource() == rectangle) {
+                        } 
+                       else if (event.getSource() == rectangle) {
 				canvas.rect();
-			} else if (event.getSource() == pencil) {
+			} 
+                       else if (event.getSource() == pencil) {
 				canvas.pencil();
-			}else if (event.getSource() == saveButton) {
+			}
+                       else if (event.getSource() == saveButton) {
 				if (saveCounter == 0) {
 					fileChooser = new JFileChooser();
 					if (fileChooser.showSaveDialog(saveButton) == JFileChooser.APPROVE_OPTION) {
@@ -170,7 +192,7 @@ public class Draw {
 		pencil.addActionListener(listener);
                 
 		rectangle = new JButton(rect);
-		rectangle.setPreferredSize(new Dimension(40, 40));
+		rectangle.setPreferredSize(new Dimension(20, 20));
 		rectangle.addActionListener(listener);
 		
                 thicknessSlider = new JSlider(JSlider.VERTICAL, 0, 50, 1);
@@ -189,59 +211,59 @@ public class Draw {
                 
 		BLACKbutton = new JButton();
 		BLACKbutton.setBackground(Color.BLACK);
-		BLACKbutton.setPreferredSize(new Dimension(40, 40));
+		BLACKbutton.setPreferredSize(new Dimension(20, 20));
 		BLACKbutton.addActionListener(listener);
                 
 		BLUEbutton = new JButton();
 		BLUEbutton.setBackground(Color.BLUE);
-		BLUEbutton.setPreferredSize(new Dimension(40, 40));
+		BLUEbutton.setPreferredSize(new Dimension(20, 20));
 		BLUEbutton.addActionListener(listener);
                 
 		GREENbutton = new JButton();
 		GREENbutton.setBackground(Color.GREEN);
-		GREENbutton.setPreferredSize(new Dimension(40, 40));
+		GREENbutton.setPreferredSize(new Dimension(20, 20));
 		GREENbutton.addActionListener(listener);
                 
 		REDbutton = new JButton();
 		REDbutton.setBackground(Color.RED);
-		REDbutton.setPreferredSize(new Dimension(40, 40));
+		REDbutton.setPreferredSize(new Dimension(20, 20));
 		REDbutton.addActionListener(listener);
                 
 		MAGENTAbutton = new JButton();
 		MAGENTAbutton.setBackground(Color.MAGENTA);
-		MAGENTAbutton.setPreferredSize(new Dimension(40, 40));
+		MAGENTAbutton.setPreferredSize(new Dimension(20, 20));
 		MAGENTAbutton.addActionListener(listener);
                 
 		GRAYbutton = new JButton();
 		GRAYbutton.setBackground(Color.GRAY);
-		GRAYbutton.setPreferredSize(new Dimension(40, 40));
+		GRAYbutton.setPreferredSize(new Dimension(20, 20));
 		GRAYbutton.addActionListener(listener);
                 
 		ORANGEbutton = new JButton();
 		ORANGEbutton.setBackground(Color.ORANGE);
-		ORANGEbutton.setPreferredSize(new Dimension(40, 40));
+		ORANGEbutton.setPreferredSize(new Dimension(20, 20));
 		ORANGEbutton.addActionListener(listener);
 		
                 YELLOWbutton = new JButton();
 		YELLOWbutton.setBackground(Color.YELLOW);
-		YELLOWbutton.setPreferredSize(new Dimension(40, 40));
+		YELLOWbutton.setPreferredSize(new Dimension(20, 20));
 		YELLOWbutton.addActionListener(listener);
 		
                 PINKbutton = new JButton();
 		PINKbutton.setBackground(Color.PINK);
-		PINKbutton.setPreferredSize(new Dimension(40, 40));
+		PINKbutton.setPreferredSize(new Dimension(20, 20));
 		PINKbutton.addActionListener(listener);
 		
                 CYANbutton = new JButton();
 		CYANbutton.setBackground(Color.CYAN);
-		CYANbutton.setPreferredSize(new Dimension(40, 40));
+		CYANbutton.setPreferredSize(new Dimension(20, 20));
 		CYANbutton.addActionListener(listener);
 		
                 lightGraybutton = new JButton();
 		lightGraybutton.setBackground(Color.LIGHT_GRAY);
-		lightGraybutton.setPreferredSize(new Dimension(40, 40));
+		lightGraybutton.setPreferredSize(new Dimension(20, 20));
 		lightGraybutton.addActionListener(listener);
-                
+                               
                 saveButton = new JButton(save);
 		saveButton.addActionListener(listener);
 		
@@ -250,6 +272,9 @@ public class Draw {
 		
 		colorPicker = new JButton(color_picker);
 		colorPicker.addActionListener(listener);
+                
+                eraserButton = new JButton(eraser);
+		eraserButton.addActionListener(listener);
                 
 		clearButton = new JButton(clear);
 		clearButton.addActionListener(listener);
@@ -285,8 +310,10 @@ public class Draw {
                 
                       
                 panel.add(colorPicker);
+                panel.add(eraserButton);
 		panel.add(clearButton);
                 panel.add(redoButton);
+                
 		container.add(panel, BorderLayout.NORTH);
 		container.add(panel1, BorderLayout.SOUTH);
 		container.add(box, BorderLayout.WEST);
